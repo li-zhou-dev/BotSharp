@@ -392,7 +392,8 @@ public class TranslationService : ITranslationService
         var render = _services.GetRequiredService<ITemplateRender>();
         var prompt = render.Render(template, translator.TemplateDict);
 
-        _logger.LogInformation($"Translation prompt: {prompt}");
+        // The prompt contains the texts being translated, which may hold personal data: log the size only.
+        _logger.LogInformation($"Translation prompt: {texts.Count} texts, {prompt.Length} chars");
 
         var translationDialogs = new List<RoleDialogModel>
         {
@@ -404,7 +405,7 @@ public class TranslationService : ITranslationService
         };
         var response = await _completion.GetChatCompletions(translator, translationDialogs);
 
-        _logger.LogInformation(response.Content);
+        _logger.LogInformation($"Translation response: {response.Content?.Length ?? 0} chars");
         return response.Content.JsonContent<TranslationOutput>();
     }
 

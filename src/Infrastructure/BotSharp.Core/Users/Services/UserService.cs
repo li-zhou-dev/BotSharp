@@ -158,7 +158,7 @@ public partial class UserService : IUserService
         user.Salt = Guid.NewGuid().ToString("N");
 
         await db.CreateUser(user);
-        _logger.LogInformation($"Created new external user account: {user.Id} {user.UserName}, ExternalId: {user.ExternalId}");
+        _logger.LogInformation($"Created new external user account: {user.Id}, ExternalId: {user.ExternalId}");
 
         foreach (var hook in _services.GetServices<IAuthenticationHook>())
         {

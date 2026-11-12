@@ -28,19 +28,13 @@ public class SqlDriverService
             Console.WriteLine(sql.Statement);
             foreach (var p in sql.Parameters)
             {
-                Console.WriteLine($"@{p.Name} = '{p.Value}'");
+                // Parameter values can be personal data: print the names only.
+                Console.WriteLine($"@{p.Name}");
             }
             if (sql.Return != null)
             {
                 Console.Write($"Return: ");
-                if (!string.IsNullOrEmpty(sql.Return.Value))
-                {
-                    Console.WriteLine($" {sql.Return.Value}");
-                }
-                else
-                {
-                    Console.WriteLine($"{sql.Return.Name} as @{sql.Return.Alias}");
-                }
+                Console.WriteLine($"{sql.Return.Name} as @{sql.Return.Alias}");
             }
         }
     }

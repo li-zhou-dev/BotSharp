@@ -16,8 +16,9 @@ public partial class ConversationService
         var agentService = _services.GetRequiredService<IAgentService>();
         Agent agent = await agentService.LoadAgent(agentId);
 
-        var content = $"Received [{agent.Name}] {message.Role}: {message.Content}";
-        _logger.LogInformation(content);
+        // The message text can contain personal data: log identifiers and size at Information, the text only at Debug.
+        _logger.LogInformation($"Received [{agent.Name}] {message.Role}, conversation: {_conversationId}, message: {message.MessageId}, {message.Content?.Length ?? 0} chars");
+        _logger.LogDebug($"Received [{agent.Name}] {message.Role}: {message.Content}");
 
         message.CurrentAgentId = agent.Id;
         if (string.IsNullOrEmpty(message.SenderId))
@@ -126,11 +127,13 @@ public partial class ConversationService
 
         // Send message always in assistant role
         response.Role = AgentRole.Assistant;
-        var text = $"Sending [{agentName}] {response.Role}: {response.Content}";
+        // The reply text can contain personal data: log identifiers and size at Information, the text only at Debug.
+        var text = $"Sending [{agentName}] {response.Role}, conversation: {_conversationId}, message: {response.MessageId}, {response.Content?.Length ?? 0} chars";
 #if DEBUG
-        Console.WriteLine(text);
+        Console.WriteLine($"Sending [{agentName}] {response.Role}: {response.Content}");
 #else
         _logger.LogInformation(text);
+        _logger.LogDebug($"Sending [{agentName}] {response.Role}: {response.Content}");
 #endif
 
         // Process rich content

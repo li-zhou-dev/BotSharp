@@ -27,7 +27,8 @@ public class WebhookController : ControllerBase
         [FromQuery(Name = "hub.challenge")] string challenge,
         [FromRoute] string agentId)
     {
-        Console.WriteLine($"Verificate {mode} {token} {challenge} {agentId}");
+        // Do not log hub.verify_token: it is a shared secret.
+        _logger.LogInformation("Messenger webhook verification, mode: {Mode}, agent: {AgentId}", mode, agentId);
         return challenge;
     }
 
@@ -40,7 +41,8 @@ public class WebhookController : ControllerBase
     {
         using var stream = new StreamReader(Request.Body);
         var body = await stream.ReadToEndAsync();
-        Console.WriteLine(body);
+        // The body carries the sender's message: log the size only.
+        _logger.LogInformation("Messenger webhook received, agent: {AgentId}, {Length} chars", agentId, body.Length);
         var req = JsonSerializer.Deserialize<WebhookRequest>(body, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,

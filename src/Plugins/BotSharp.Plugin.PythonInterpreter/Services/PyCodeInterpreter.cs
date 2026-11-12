@@ -219,7 +219,8 @@ public class PyCodeInterpreter : ICodeProcessor
                 }
                 sys.argv = list;
 
-                _logger.LogWarning($"Code script {options?.ScriptName} arguments: {string.Join("\r\n", options?.Arguments?.Select(x => x.ToString()) ?? [])}. Thread: {Thread.CurrentThread.ManagedThreadId}.");
+                // Argument values can contain personal data (emails, names, proposal JSON): log the keys only.
+                _logger.LogDebug($"Code script {options?.ScriptName} argument keys: {string.Join(", ", options?.Arguments?.Select(x => x.Key) ?? [])}. Thread: {Thread.CurrentThread.ManagedThreadId}.");
 
                 _logger.LogWarning($"Before executing code script {options?.ScriptName}. Thread: {Thread.CurrentThread.ManagedThreadId}.");
 

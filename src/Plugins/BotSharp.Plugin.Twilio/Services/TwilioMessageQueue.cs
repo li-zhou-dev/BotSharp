@@ -24,7 +24,8 @@ namespace BotSharp.Plugin.Twilio.Services
                 throw new ArgumentNullException(nameof(request));
             }
 
-            Console.WriteLine($"[{DateTime.UtcNow}] Enqueue {request}");
+            // request.Content is what the caller said: log the identifiers only.
+            Console.WriteLine($"[{DateTime.UtcNow}] Enqueue {request.ConversationId}-{request.SeqNumber}");
             await _queue.Writer.WriteAsync(request);
         }
 
