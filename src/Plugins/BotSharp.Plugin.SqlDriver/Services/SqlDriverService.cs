@@ -28,7 +28,6 @@ public class SqlDriverService
             Console.WriteLine(sql.Statement);
             foreach (var p in sql.Parameters)
             {
-                // Parameter values can be personal data: print the names only.
                 Console.WriteLine($"@{p.Name}");
             }
             if (sql.Return != null)

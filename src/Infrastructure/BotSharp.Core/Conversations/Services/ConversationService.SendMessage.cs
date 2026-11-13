@@ -16,9 +16,9 @@ public partial class ConversationService
         var agentService = _services.GetRequiredService<IAgentService>();
         Agent agent = await agentService.LoadAgent(agentId);
 
-        // The message text can contain personal data: log identifiers and size at Information, the text only at Debug.
-        _logger.LogInformation($"Received [{agent.Name}] {message.Role}, conversation: {_conversationId}, message: {message.MessageId}, {message.Content?.Length ?? 0} chars");
-        _logger.LogDebug($"Received [{agent.Name}] {message.Role}: {message.Content}");
+        _logger.LogInformation("Received [{Agent}] {Role}, conversation: {ConversationId}, message: {MessageId}, {Length} chars",
+            agent.Name, message.Role, _conversationId, message.MessageId, message.Content?.Length ?? 0);
+        _logger.LogDebug("Received [{Agent}] {Role}: {Content}", agent.Name, message.Role, message.Content);
 
         message.CurrentAgentId = agent.Id;
         if (string.IsNullOrEmpty(message.SenderId))
@@ -127,13 +127,12 @@ public partial class ConversationService
 
         // Send message always in assistant role
         response.Role = AgentRole.Assistant;
-        // The reply text can contain personal data: log identifiers and size at Information, the text only at Debug.
-        var text = $"Sending [{agentName}] {response.Role}, conversation: {_conversationId}, message: {response.MessageId}, {response.Content?.Length ?? 0} chars";
 #if DEBUG
         Console.WriteLine($"Sending [{agentName}] {response.Role}: {response.Content}");
 #else
-        _logger.LogInformation(text);
-        _logger.LogDebug($"Sending [{agentName}] {response.Role}: {response.Content}");
+        _logger.LogInformation("Sending [{Agent}] {Role}, conversation: {ConversationId}, message: {MessageId}, {Length} chars",
+            agentName, response.Role, _conversationId, response.MessageId, response.Content?.Length ?? 0);
+        _logger.LogDebug("Sending [{Agent}] {Role}: {Content}", agentName, response.Role, response.Content);
 #endif
 
         // Process rich content

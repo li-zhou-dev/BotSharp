@@ -392,7 +392,6 @@ public class TranslationService : ITranslationService
         var render = _services.GetRequiredService<ITemplateRender>();
         var prompt = render.Render(template, translator.TemplateDict);
 
-        // The prompt contains the texts being translated, which may hold personal data: log the size only.
         _logger.LogInformation($"Translation prompt: {texts.Count} texts, {prompt.Length} chars");
 
         var translationDialogs = new List<RoleDialogModel>
