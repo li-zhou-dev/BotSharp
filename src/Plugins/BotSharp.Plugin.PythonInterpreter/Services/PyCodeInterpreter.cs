@@ -1,3 +1,4 @@
+using BotSharp.Abstraction.Utilities;
 using BotSharp.Abstraction.Templating;
 using Microsoft.Extensions.Logging;
 using Python.Runtime;
@@ -219,7 +220,7 @@ public class PyCodeInterpreter : ICodeProcessor
                 }
                 sys.argv = list;
 
-                _logger.LogDebug($"Code script {options?.ScriptName} argument keys: {string.Join(", ", options?.Arguments?.Select(x => x.Key) ?? [])}. Thread: {Thread.CurrentThread.ManagedThreadId}.");
+                _logger.LogWarning($"Code script {options?.ScriptName} arguments: {string.Join("\r\n", options?.Arguments?.Select(x => LogSanitizer.Sanitize(x.ToString())) ?? [])}. Thread: {Thread.CurrentThread.ManagedThreadId}.");
 
                 _logger.LogWarning($"Before executing code script {options?.ScriptName}. Thread: {Thread.CurrentThread.ManagedThreadId}.");
 

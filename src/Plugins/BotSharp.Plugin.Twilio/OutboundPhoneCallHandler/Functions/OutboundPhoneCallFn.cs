@@ -129,7 +129,7 @@ public class OutboundPhoneCallFn : IFunctionCallback
         }
         catch (ApiException ex) when (NotAllowedToCallErrorCodes.Contains(ex.Code))
         {
-            _logger.LogWarning(ex, "Not allowed to call {PhoneNumber}", args.PhoneNumber);
+            _logger.LogWarning(ex, "Not allowed to call {PhoneNumber}", LogSanitizer.Sanitize(args.PhoneNumber));
             message.Content = $"Not allowed to call {args.PhoneNumber}.";
             message.StopCompletion = true;
             return false;

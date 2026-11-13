@@ -29,7 +29,7 @@ public class SignalRHub : Hub
         var convService = _services.GetRequiredService<IConversationService>();
         var httpContext = Context?.GetHttpContext();
 
-        _logger.LogInformation($"SignalR Hub: {_user?.FirstName} {_user?.LastName} ({Context?.User?.Identity?.Name ?? "Unkown user"}) connected in {Context?.ConnectionId}");
+        _logger.LogInformation("SignalR Hub: user {UserId} connected in {ConnectionId}", _user?.Id, Context?.ConnectionId);
 
         string? conversationId = httpContext?.Request?.Query["conversation-id"].FirstOrDefault();
 

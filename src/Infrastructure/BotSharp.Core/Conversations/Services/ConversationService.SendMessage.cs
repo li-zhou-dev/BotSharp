@@ -1,3 +1,4 @@
+using BotSharp.Abstraction.Utilities;
 using BotSharp.Abstraction.Infrastructures.Enums;
 using BotSharp.Abstraction.Messaging;
 using BotSharp.Abstraction.Messaging.Models.RichContent;
@@ -16,9 +17,7 @@ public partial class ConversationService
         var agentService = _services.GetRequiredService<IAgentService>();
         Agent agent = await agentService.LoadAgent(agentId);
 
-        _logger.LogInformation("Received [{Agent}] {Role}, conversation: {ConversationId}, message: {MessageId}, {Length} chars",
-            agent.Name, message.Role, _conversationId, message.MessageId, message.Content?.Length ?? 0);
-        _logger.LogDebug("Received [{Agent}] {Role}: {Content}", agent.Name, message.Role, message.Content);
+        _logger.LogInformation("Received [{Agent}] {Role}: {Content}", agent.Name, message.Role, LogSanitizer.Sanitize(message.Content));
 
         message.CurrentAgentId = agent.Id;
         if (string.IsNullOrEmpty(message.SenderId))
@@ -128,11 +127,9 @@ public partial class ConversationService
         // Send message always in assistant role
         response.Role = AgentRole.Assistant;
 #if DEBUG
-        Console.WriteLine($"Sending [{agentName}] {response.Role}: {response.Content}");
+        Console.WriteLine($"Sending [{agentName}] {response.Role}: {LogSanitizer.Sanitize(response.Content)}");
 #else
-        _logger.LogInformation("Sending [{Agent}] {Role}, conversation: {ConversationId}, message: {MessageId}, {Length} chars",
-            agentName, response.Role, _conversationId, response.MessageId, response.Content?.Length ?? 0);
-        _logger.LogDebug("Sending [{Agent}] {Role}: {Content}", agentName, response.Role, response.Content);
+        _logger.LogInformation("Sending [{Agent}] {Role}: {Content}", agentName, response.Role, LogSanitizer.Sanitize(response.Content));
 #endif
 
         // Process rich content

@@ -1,3 +1,4 @@
+using BotSharp.Abstraction.Utilities;
 using BotSharp.Abstraction.Realtime.Settings;
 
 namespace BotSharp.Plugin.OpenAI.Providers.Live;
@@ -50,7 +51,7 @@ public partial class LiveCompletionProvider
             }
             catch (JsonException ex)
             {
-                _logger.LogError(ex, "Unable to parse {Provider} event: {Payload}", Provider, receivedText);
+                _logger.LogError(ex, "Unable to parse {Provider} event: {Payload}", Provider, LogSanitizer.Sanitize(receivedText));
                 continue;
             }
 

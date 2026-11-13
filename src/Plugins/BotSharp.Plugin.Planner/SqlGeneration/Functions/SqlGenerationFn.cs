@@ -1,3 +1,4 @@
+using BotSharp.Abstraction.Utilities;
 using BotSharp.Abstraction.Infrastructures.Enums;
 using BotSharp.Plugin.Planner.SqlGeneration;
 using BotSharp.Plugin.Planner.TwoStaging;
@@ -57,7 +58,7 @@ public class SqlGenerationFn : IFunctionCallback
 
         // Summarize and generate query
         var prompt = await GetSqlGenerationPrompt(msgCopy, taskRequirement, domainKnowledge, dictionaryItems, ddlStatements, excelImportResult);
-        _logger.LogInformation($"SQL Generation plan prompt:\r\n{prompt}");
+        _logger.LogInformation("SQL Generation plan prompt:\r\n{Prompt}", LogSanitizer.Sanitize(prompt));
 
         var plannerAgent = new Agent
         {

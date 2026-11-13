@@ -1,3 +1,4 @@
+using BotSharp.Abstraction.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +41,7 @@ public class WebhookController : ControllerBase
     {
         using var stream = new StreamReader(Request.Body);
         var body = await stream.ReadToEndAsync();
-        _logger.LogInformation("Messenger webhook received, agent: {AgentId}, {Length} chars", agentId, body.Length);
+        _logger.LogInformation("Messenger webhook received, agent: {AgentId}, body: {Body}", agentId, LogSanitizer.Sanitize(body));
         var req = JsonSerializer.Deserialize<WebhookRequest>(body, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,

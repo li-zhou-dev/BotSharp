@@ -1,3 +1,4 @@
+using BotSharp.Abstraction.Utilities;
 using BotSharp.Abstraction.Infrastructures.Enums;
 using BotSharp.Plugin.Planner.TwoStaging.Models;
 
@@ -55,7 +56,7 @@ public class SummaryPlanFn : IFunctionCallback
 
         // Summarize and generate query
         var prompt = await GetSummaryPlanPrompt(msgCopy, taskRequirement, domainKnowledge, dictionaryItems, ddlStatements, excelImportResult);
-        _logger.LogInformation($"Summary plan prompt:\r\n{prompt}");
+        _logger.LogInformation("Summary plan prompt:\r\n{Prompt}", LogSanitizer.Sanitize(prompt));
 
         var plannerAgent = new Agent
         {

@@ -1,3 +1,4 @@
+using BotSharp.Abstraction.Utilities;
 using BotSharp.Plugin.SqlDriver.Models;
 
 namespace BotSharp.Plugin.SqlDriver.Services;
@@ -28,12 +29,19 @@ public class SqlDriverService
             Console.WriteLine(sql.Statement);
             foreach (var p in sql.Parameters)
             {
-                Console.WriteLine($"@{p.Name}");
+                Console.WriteLine($"@{p.Name} = '{LogSanitizer.Sanitize(p.Value?.ToString())}'");
             }
             if (sql.Return != null)
             {
                 Console.Write($"Return: ");
-                Console.WriteLine($"{sql.Return.Name} as @{sql.Return.Alias}");
+                if (!string.IsNullOrEmpty(sql.Return.Value))
+                {
+                    Console.WriteLine($" {LogSanitizer.Sanitize(sql.Return.Value)}");
+                }
+                else
+                {
+                    Console.WriteLine($"{sql.Return.Name} as @{sql.Return.Alias}");
+                }
             }
         }
     }

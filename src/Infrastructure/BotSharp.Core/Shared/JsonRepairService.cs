@@ -1,3 +1,4 @@
+using BotSharp.Abstraction.Utilities;
 using BotSharp.Abstraction.Models;
 using BotSharp.Abstraction.Settings;
 using BotSharp.Abstraction.Shared;
@@ -120,7 +121,7 @@ public class JsonRepairService : IJsonRepairService
 
             var response = await completion.GetChatCompletions(innerAgent, dialogs);
 
-            _logger.LogInformation($"JSON repair result: {response.Content}");
+            _logger.LogInformation("JSON repair result: {Content}", LogSanitizer.Sanitize(response.Content));
             return response.Content.CleanJsonStr();
         }
         catch (Exception ex)

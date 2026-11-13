@@ -1,3 +1,4 @@
+using BotSharp.Abstraction.Utilities;
 using BotSharp.Plugin.Planner.TwoStaging.Models;
 
 namespace BotSharp.Plugin.Planner.TwoStaging.Functions;
@@ -48,7 +49,7 @@ public class SecondaryStagePlanFn : IFunctionCallback
         // Get second stage planning prompt
         var currentAgent = await agentService.LoadAgent(message.CurrentAgentId);
         var prompt = await GetSecondStagePlanPrompt(taskSecondary.TaskDescription, planResult, knowledgeResults, message);
-        _logger.LogInformation(prompt);
+        _logger.LogInformation("Plan prompt: {Prompt}", LogSanitizer.Sanitize(prompt));
 
         var plannerAgent = new Agent
         {
@@ -60,7 +61,7 @@ public class SecondaryStagePlanFn : IFunctionCallback
 
         var response = await GetAiResponse(plannerAgent);
         message.Content = response.Content;
-        _logger.LogInformation(response.Content);
+        _logger.LogInformation("Plan response: {Content}", LogSanitizer.Sanitize(response.Content));
 
         states.SetState("planning_result", response.Content);
         return true;

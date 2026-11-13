@@ -1,3 +1,4 @@
+using BotSharp.Abstraction.Utilities;
 using BotSharp.Abstraction.Conversations.Settings;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -58,7 +59,8 @@ public class HandleEmailSenderFn : IFunctionCallback
             var response = await SendEmailBySMTP(mailMessage);
             message.Content = response;
 
-            _logger.LogWarning($"Email successfully send over to {string.Join(",", recipients)}. Email Subject: {subject} [{response}]");
+            _logger.LogWarning("Email successfully send over to {Recipients}. Email Subject: {Subject} [{Response}]",
+                string.Join(",", recipients.Select(LogSanitizer.Sanitize)), LogSanitizer.Sanitize(subject), response);
             return true;
         }
         catch (Exception ex)

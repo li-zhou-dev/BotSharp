@@ -14,6 +14,7 @@
   limitations under the License.
 ******************************************************************************/
 
+using BotSharp.Abstraction.Utilities;
 using BotSharp.Abstraction.Infrastructures.Enums;
 using BotSharp.Abstraction.MLTasks;
 using BotSharp.Abstraction.Options;
@@ -392,7 +393,7 @@ public class TranslationService : ITranslationService
         var render = _services.GetRequiredService<ITemplateRender>();
         var prompt = render.Render(template, translator.TemplateDict);
 
-        _logger.LogInformation($"Translation prompt: {texts.Count} texts, {prompt.Length} chars");
+        _logger.LogInformation("Translation prompt: {Prompt}", LogSanitizer.Sanitize(prompt));
 
         var translationDialogs = new List<RoleDialogModel>
         {
@@ -404,7 +405,7 @@ public class TranslationService : ITranslationService
         };
         var response = await _completion.GetChatCompletions(translator, translationDialogs);
 
-        _logger.LogInformation($"Translation response: {response.Content?.Length ?? 0} chars");
+        _logger.LogInformation("Translation response: {Content}", LogSanitizer.Sanitize(response.Content));
         return response.Content.JsonContent<TranslationOutput>();
     }
 

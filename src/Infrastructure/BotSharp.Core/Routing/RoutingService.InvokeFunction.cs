@@ -1,3 +1,4 @@
+using BotSharp.Abstraction.Utilities;
 using BotSharp.Abstraction.Routing.Executor;
 using BotSharp.Abstraction.Routing.Models;
 using BotSharp.Core.MessageHub;
@@ -80,7 +81,7 @@ public partial class RoutingService
         }
         catch (JsonException ex)
         {
-            _logger.LogError(ex, $"The input does not contain any JSON tokens:\r\n{message.Content}\r\n{ex.Message}");
+            _logger.LogError(ex, "The input does not contain any JSON tokens:\r\n{Content}", LogSanitizer.Sanitize(message.Content));
             message.StopCompletion = true;
             message.Content = ex.Message;
         }
